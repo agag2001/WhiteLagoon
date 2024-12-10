@@ -15,6 +15,7 @@ namespace WhiteLagoon.Infrastructure.Data
 
         }
         public DbSet<Villa> Villas { get; set; }
+        public DbSet<VillaNumber> VillaNumbers { get; set; }    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,7 +51,49 @@ namespace WhiteLagoon.Infrastructure.Data
                     Price = 400,
                     Sqft = 750,
                 });
+            modelBuilder.Entity<VillaNumber>().HasData(
+                new VillaNumber
+                {
+                    Villa_Number = 101,
+                    Villa_id= 1
+                },
+                new VillaNumber
+                {
+                    Villa_Number = 102,
+                    Villa_id = 1
+                },
+                new VillaNumber
+                {
+                    Villa_Number = 103,
+                    Villa_id = 1
+                },
+                new VillaNumber
+                {
+                    Villa_Number = 104 ,
+                    Villa_id = 1
+                },
 
+                new VillaNumber
+                {
+                    Villa_Number = 201,
+                    Villa_id = 2
+                },
+                new VillaNumber
+                {
+                    Villa_Number = 202,
+                    Villa_id = 2
+                },
+                new VillaNumber
+                {
+                    Villa_Number = 203,
+                    Villa_id = 2
+                },
+                new VillaNumber
+                {
+                    Villa_Number = 204,
+                    Villa_id = 2
+                }
+                );
         }
     }
 }

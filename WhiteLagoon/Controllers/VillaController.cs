@@ -37,10 +37,68 @@ namespace WhiteLagoon.Controllers
             {
                 _context.Villas.Add(obj);
                 _context.SaveChanges();
-                return RedirectToAction("index");
+                TempData["success"] = "Villa is Created successfuly . ";
+                return RedirectToAction(nameof(Index));
             }
+            TempData["error"] = "Villa is Created successfuly . ";
             return View(obj);
           
         }
+
+        #region update
+        public IActionResult Update(int VillaId)
+        {
+            Villa? obj = _context.Villas.FirstOrDefault(x => x.Id == VillaId);
+            if (obj == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            return View("Update", obj);
+
+        }
+        [HttpPost]
+        public IActionResult Update(Villa obj)
+        {
+
+            if (ModelState.IsValid)
+            {
+                _context.Villas.Update(obj);
+                _context.SaveChanges();
+                TempData["success"] = "Villa is updated successfuly . ";
+                return RedirectToAction(nameof(Index));
+            }
+            TempData["error"] = "Villa can't be update ";
+            return View(obj);
+
+        }
+        #endregion
+     
+        public IActionResult Delete(int VillaId)
+        {
+            Villa? obj = _context.Villas.FirstOrDefault(x => x.Id == VillaId);
+            if (obj is null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            return View( obj);
+
+        }
+        [HttpPost]
+        public IActionResult Delete(Villa obj)
+        {
+            Villa? objDb = _context.Villas.FirstOrDefault(x => x.Id == obj.Id);
+
+            if (objDb is not null)
+            {
+                _context.Villas.Remove(objDb);
+                _context.SaveChanges();
+                TempData["success"] = "the villa has been deleted successfuly";
+                return RedirectToAction(nameof(Index));
+            }
+            TempData["error"] = "the villa can't be deleted";
+            return View(obj);
+
+        }
+
     }
 }
