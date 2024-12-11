@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using WhiteLagoon.Application.Common.Interfaces;
 using WhiteLagoon.Infrastructure.Data;
+using WhiteLagoon.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 });
 
-
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>(); 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -19,7 +21,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseHsts(); 
 }
 
 app.UseHttpsRedirection();
