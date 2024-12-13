@@ -1,0 +1,71 @@
+﻿@model AmenityVM
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="w-100 card border-0 p-4">
+    <!-- Card Header -->
+    <div class="card-header bg-success bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Create Amenity</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body border p-4">
+        <form method="post" asp-action="Create" asp-controller="Amenity" class="row">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="p-3">
+
+                    <!-- Villas -->
+                <div class="form-floating py-2 col-12">
+                    <select asp-for="@Model.VillaId" asp-items="@Model.VillaList "
+                        class="form-select border shodow">
+                                <option disabled selected> --Select Villa--</option>
+                        </select>
+                    <label asp-for="@Model.VillaId" class="ms-2"></label>
+                      <span asp-validation-for="@Model.VillaId" class="text-danger"></span>
+                </div>
+
+                <!-- Name -->
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="@Model.Name" class="form-control border shadow" />
+                    <label asp-for="@Model.Name" class="ms-2"></label>
+                    <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="@Model.Description" class="form-control border shadow" />
+                    <label asp-for="@Model.Description" class="ms-2"></label>
+                     <span asp-validation-for="@Model.Description" class="text-danger"></span>
+                </div>
+
+
+
+                <!-- Submit Button -->
+                <div class="row pt-2">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-check-circle"></i> Create
+                        </button>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                        <a asp-action="index" asp-controller="Amenity" class="btn btn-secondary w-100">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+
+    @{
+                        <partial name="_ValidationScriptsPartial" />
+    }
+}

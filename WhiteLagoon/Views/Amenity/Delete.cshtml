@@ -1,4 +1,4 @@
-﻿@model VillaNumberVM
+﻿@model AmenityVM
 @{
     ViewData["Title"] = "Delete";
 }
@@ -8,39 +8,39 @@
     <div class="card-header bg-success bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Delete Villa Number</h2>
+                <h2 class="text-white py-2">Delete Amenity</h2>
             </div>
         </div>
     </div>
 
     <!-- Card Body -->
     <div class="card-body border p-4">
-        <form method="post" asp-action="Delete" asp-controller="VillaNumber" class="row">
-            <input asp-for="@Model.Villa_Number" hidden />
+        <form method="post" asp-action="Delete" asp-controller="Amenity" class="row">
             <div class="p-3">
+                <input asp-for="@Model.Id" hidden />
 
                     <!-- Villas -->
                 <div class="form-floating py-2 col-12">
-                    <select asp-for="@Model.Villa_id" asp-items="@Model.VillaList " disabled
+                    <select asp-for="@Model.VillaId" asp-items="@Model.VillaList " disabled
                         class="form-select border shodow">
                                 <option disabled selected> --Select Villa--</option>
                         </select>
-                    <label asp-for="@Model.Villa_id" class="ms-2"></label>
-                     
+                    <label asp-for="@Model.VillaId" class="ms-2"></label>
+
                 </div>
 
                 <!-- Name -->
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="@Model.Villa_Number" disabled class="form-control border shadow" />
-                    <label asp-for="@Model.Villa_Number" class="ms-2"></label>
-                    
+                    <input asp-for="@Model.Name" disabled class="form-control border shadow" />
+                    <label asp-for="@Model.Name" class="ms-2"></label>
+
                 </div>
 
                 <!-- Description -->
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="@Model.SpecialDetails" disabled class="form-control border shadow" />
-                    <label asp-for="@Model.SpecialDetails" class="ms-2"></label>
-                  
+                    <input asp-for="@Model.Description" disabled class="form-control border shadow" />
+                    <label asp-for="@Model.Description" class="ms-2"></label>
+
                 </div>
 
 
@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="col-6 col-md-3">
-                        <a asp-action="index" asp-controller="Villa" class="btn btn-secondary w-100">
+                        <a asp-action="index" asp-controller="Amenity" class="btn btn-secondary w-100">
                             <i class="bi bi-x-circle"></i> Cancel
                         </a>
                     </div>
@@ -66,6 +66,6 @@
 @section Scripts {
 
     @{
-                                <partial name="_ValidationScriptsPartial" />
+                                        <partial name="_ValidationScriptsPartial" />
     }
 }
