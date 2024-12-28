@@ -33,7 +33,10 @@ namespace WhiteLagoon.Domain.Entites
         public DateTime? UpdatedDate { get;set; }
          
         [ValidateNever]
-        public IEnumerable<Amenity> VillaAmenity { get; set; } 
+        public IEnumerable<Amenity> VillaAmenity { get; set; }
+
+        [NotMapped]
+        public bool IsAvilable { get; set; }     = true;    
 
     }
 }
