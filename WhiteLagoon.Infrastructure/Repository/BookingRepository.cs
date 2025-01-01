@@ -23,16 +23,17 @@ namespace WhiteLagoon.Infrastructure.Repository
             
         }
 
-        public void UpdateStauts(int bookingId, string bookingStatus)
+        public void UpdateStauts(int bookingId, string bookingStatus,int villaNumber=0)
         {
            var bookingDB = _context.Bookings.FirstOrDefault(b=>b.Id==  bookingId);    
            if(bookingDB is not null)
            {
-                if (string.IsNullOrEmpty(bookingStatus))
+                if (!string.IsNullOrEmpty(bookingStatus))
                 {
                     bookingDB.Status = bookingStatus;   
                     if(bookingStatus== SD.StatusCheckIn)
                     {
+                        bookingDB.VillaNumber = villaNumber;
                          bookingDB.ActualCheckInDate = DateTime.Now;       
                     }
                     if(bookingStatus == SD.StatusCompleted)
@@ -40,6 +41,7 @@ namespace WhiteLagoon.Infrastructure.Repository
                         bookingDB.ActualCheckOutDate = DateTime.Now;    
                     }
                 }
+                
            }
            
         }

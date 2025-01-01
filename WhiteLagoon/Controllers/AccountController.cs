@@ -133,16 +133,22 @@ namespace WhiteLagoon.Controllers
                     var result = await _signInManager.PasswordSignInAsync(userDB, model.Password, model.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
-                        if (string.IsNullOrEmpty(model.RedirectURL))
+                        var user = await _userManager.FindByEmailAsync(model.Email);
+                        if( await _userManager.IsInRoleAsync(user, SD.Role_Admin))
                         {
-                            return RedirectToAction("Index", "Home");
+                            return RedirectToAction("Index", "Dashboard");
                         }
                         else
                         {
-                            return LocalRedirect(model.RedirectURL);
-                        }
-
-
+							if (string.IsNullOrEmpty(model.RedirectURL))
+							{
+								return RedirectToAction("Index", "Home");
+							}
+							else
+							{
+								return LocalRedirect(model.RedirectURL);
+							}
+						}
                     }
                     else
                     {

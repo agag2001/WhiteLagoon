@@ -20,3 +20,6 @@ html {
 body {
   margin-bottom: 60px;
 }
+.dt-layout-cell {
+    margin-bottom :10px;
+}

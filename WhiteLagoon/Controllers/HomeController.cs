@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WhiteLagoon.Application.Common.Interfaces;
+using WhiteLagoon.Application.Utilities;
 using WhiteLagoon.Models;
 using WhiteLagoon.ViewModels;
 
@@ -33,11 +34,18 @@ namespace WhiteLagoon.Controllers
         public IActionResult GetVillasByDate(int nights , DateOnly checkInDate)
         {
             var villalist = _unitOfWork.Villa.GetAll(includeProperties:"VillaAmenity");
+            // get only the approved bookings and the checkin (Status) these books may overlapped with my Booking
+            var bookings = _unitOfWork.Booking.GetAll(b => b.Status == SD.StatusApproved || b.Status == SD.StatusCheckIn).ToList();
+
+            var villaNumbers = _unitOfWork.VillaNumber.GetAll().ToList();
+            
 
             foreach (var Villa in villalist)
             {
-                if (Villa.Id % 2 == 0)
-                    Villa.IsAvilable = false;
+                var availabelRooms = SD.VillaRoomAvailable_Count(Villa.Id, bookings, villaNumbers, nights, checkInDate);
+                Villa.IsAvilable = availabelRooms > 0 ? true : false;   
+                
+               
             }
             HomeVM homeVM = new()
             {
