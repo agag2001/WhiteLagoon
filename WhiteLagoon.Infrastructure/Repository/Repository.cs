@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,17 @@ namespace WhiteLagoon.Infrastructure.Repository
 			return _dbSet.Any(filter);
 		}
 
-		public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+		public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
 		{
-			IQueryable<T> query = _context.Set<T>();
+			IQueryable<T> query ;
+			if (tracked)
+			{
+				query = _dbSet;
+			}
+			else
+			{
+				query = _dbSet.AsNoTracking();
+			}
 			if (filter is not null)
 			{
 				query = query.Where(filter);
@@ -52,10 +61,19 @@ namespace WhiteLagoon.Infrastructure.Repository
 
 		}
 
-		public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+		public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false)
 		{
-			IQueryable<T> query = _dbSet;
-			if (filter is not null)
+			IQueryable<T> query;
+
+			if (tracked)
+            {
+                query = _dbSet;
+            }
+            else
+            {
+                query = _dbSet.AsNoTracking();
+            }
+            if (filter is not null)
 			{
 				query = query.Where(filter);
 			}

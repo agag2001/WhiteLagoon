@@ -1,1 +1,135 @@
-﻿<h1>Admin Dashboard</h1>
+﻿﻿<div class="container-fluid">
+    <div class="row">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">Dashboard</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-xl-4 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="float-end mt-2">
+                        <div id="totalBookingsRadialChart" data-colors='["#A6A6DE","#1E55A7"]'></div>
+                    </div>
+                    <div>
+                        <p class="text-muted ">Total Bookings</p>
+                        <h4 class="my-1">
+                            <span id="spanTotalBookingCount">XX</span>
+                        </h4>
+                    </div>
+                    <p class="text-muted mt-3 mb-0" id="sectionBookingCount"></p>
+
+                    <div class="justify-content-center text-center chart-spinner" style="display">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+         <div class="col-md-6 col-xl-4 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="float-end mt-2">
+                        <div id="totalUsersRadialChart" data-colors='["#A4E9F9","#8578EA"]' ></div>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-0">Total Users</p>
+                        <h4 class="my-1">
+                            <span id="spanTotalUserCount">XX</span>
+                        </h4>
+                    </div>
+                    <p class="text-muted mt-3 mb-0" id="sectionUserCount"></p>
+
+                    <div class="justify-content-center text-center chart-spinner" style="display">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+         <div class="col-md-6 col-xl-4 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="float-end mt-2">
+                        <div id="totalRevenuesRadialChart" data-colors='["#9491E2","#AFF2D8"]'></div>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-0">Total Revenues</p>
+                        <h4 class="my-1">
+                            <span id="spanTotalRevenueCount">XX</span>
+                        </h4>
+                    </div>
+                    <p class="text-muted mt-3 mb-0" id="sectionRevenueCount"></p>
+
+                    <div class="justify-content-center text-center chart-spinner" style="display">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+         <div class="col-md-12 col-xl-8 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mt-2" >
+                         <p class="text-muted">New Clients And Booking In The Past 30 Days</p> 
+                    </div>
+                    <div id="newCustomerAndBookingLineChart" data-colors='["#A4E9F9","#8578EA"]'>
+                                             
+                    </div>
+                    <div class="justify-content-center text-center chart-spinner" style="display">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+         <div class="col-md-12 col-xl-4 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+                        <p class="text-muted mb-0">Customer Bookings</p>
+                    </div>
+                    <div>
+                         <div id="CustomerBookingPieChart" data-colors='["#A4E9F9","#8578EA"]'></div>
+                    </div>
+
+                    <div class="justify-content-center text-center chart-spinner" style="display">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+@section scripts{
+        <script src="~/js/Dashboard/getTotalBookingRedialChart.js"></script>
+        <script src="~/js/Dashboard/getTotalRevenueRedialChart.js"></script>
+        <script src="~/js/Dashboard/getTotalUserRedialChart.js"></script>
+        <script src="~/js/radialChart.js"></script>
+        <script src="~/js/Dashboard/getCustomerBookingPieChart.js"></script>
+        <script src="~/js/Dashboard/getCustomerAndBookingLlineChart.js"></script>
+
+}

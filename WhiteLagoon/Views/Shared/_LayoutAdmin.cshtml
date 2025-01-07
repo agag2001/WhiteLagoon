@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="~/css/spinner.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="~/css/apexcharts.css" />
 </head>
 <body>
     <header>
@@ -93,6 +94,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js" asp-append-version="true"> </script>
     @*  <script src="~/js/jquery.unobtrusive-ajax.min.js"></script> *@
+   @*  <script src="~/js/apexcharts.js"></script> *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.3.0/apexcharts.min.js" integrity="sha512-QgLS4OmTNBq9TujITTSh0jrZxZ55CFjs4wjK8NXsBoZb04UYl8wWQJNaS8jRiLq6/c60bEfOj3cPsxadHICNfw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -35,14 +35,7 @@ namespace WhiteLagoon.Controllers
         public IActionResult Register(string returnUrl = null)
         {
             returnUrl ??= Url.Content("/");
-            // Selecting Role in the Register is a Security Issues 
-            // but we will handel that in the Deployement
-            if (!_roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult())
-            {
-
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).Wait();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).Wait();
-            }
+         
             RegisterVM registerVM = new()
             {
                 RoleList = _roleManager.Roles.Select(x => new SelectListItem

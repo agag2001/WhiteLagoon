@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using WhiteLagoon.Application.Common.DTO;
 using WhiteLagoon.Domain.Entites;
 
 namespace WhiteLagoon.Application.Utilities
@@ -61,6 +62,25 @@ namespace WhiteLagoon.Application.Utilities
             }
             return FinalAvailabelRooms;
 
+        }
+
+        public static RedialChartDto GetRedialChartDataModel(int ModelCount, double currentMonthCount, double lastMonthCount)
+        {
+            int increaseDecreaseRatio = 100;
+            if (lastMonthCount != 0)
+            {
+                // Use floating-point division to avoid truncation
+                increaseDecreaseRatio = (int)(((double)(currentMonthCount - lastMonthCount) / lastMonthCount) * 100);
+            }
+            RedialChartDto RedialChartDto = new RedialChartDto()
+            {
+                TotalCount = ModelCount,
+                CountInCurrentMonth = currentMonthCount,
+                IsRatioIncrease = currentMonthCount > lastMonthCount,
+                Series = new int[] { increaseDecreaseRatio }
+
+            };
+            return RedialChartDto;
         }
 
     }

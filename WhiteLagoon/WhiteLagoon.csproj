@@ -22,6 +22,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="Stripe.net" Version="47.2.0" />
+    <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="28.1.37" />
+    <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="28.1.37" />
+    <PackageReference Include="Syncfusion.Licensing" Version="28.1.37" />
+    <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="28.1.37" />
+    <PackageReference Include="Syncfusion.Presentation.Net.Core" Version="28.1.37" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +35,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Images\VillaImage\" />
+    <Folder Include="wwwroot\Exports\" />
   </ItemGroup>
 
 </Project>
