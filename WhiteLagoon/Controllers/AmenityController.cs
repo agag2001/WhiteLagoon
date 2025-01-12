@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Runtime.CompilerServices;
 using WhiteLagoon.Application.Common.Interfaces;
+using WhiteLagoon.Application.Services.Interface;
 using WhiteLagoon.Application.Utilities;
 using WhiteLagoon.Domain.Entites;
 using WhiteLagoon.ViewModels;
@@ -11,15 +13,19 @@ namespace WhiteLagoon.Controllers
     [Authorize(Roles = "Admin")]
     public class AmenityController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IAmenityService _amenityService;
+        private readonly IVillaService _villaService;
 
-        public AmenityController(IUnitOfWork unitOfWork)
+
+        public AmenityController(IAmenityService amenityService, IVillaService virillaService)
         {
-            _unitOfWork = unitOfWork;
+
+            _amenityService = amenityService;
+            _villaService = virillaService;
         }
         public IActionResult Index()
         {
-            var amenities = _unitOfWork.Amenity.GetAll(includeProperties:"Villa");
+            var amenities = _amenityService.GetAllAmenities(IncludeProperties:"Villa");
             return View(amenities);
         }
         #region Create
@@ -27,12 +33,8 @@ namespace WhiteLagoon.Controllers
         {
             AmenityVM model = new AmenityVM()
             {
-                VillaList = _unitOfWork.Villa.GetAll()
-                                                .Select(x => new SelectListItem
-                                                {
-                                                    Text = x.Name,
-                                                    Value = x.Id.ToString()
-                                                })
+                VillaList = VillaDropDownList()
+
             };
             return View("Create", model);
         }
@@ -48,10 +50,13 @@ namespace WhiteLagoon.Controllers
                     VillaId = amenityVM.VillaId
 
                 };
-                _unitOfWork.Amenity.Add(amenityDB);
-                _unitOfWork.Save();
-                TempData["success"] = "A new Amenity Created successfuly";
-                return RedirectToAction("Index");
+                bool created = _amenityService.CreateAmenity(amenityDB);
+                if (created)
+                {
+                    TempData["success"] = "A new Amenity Created successfuly";
+                    return RedirectToAction("Index");
+                }
+                
             }
             TempData["error"] = "can't create Amentiy";
             return View(amenityVM);
@@ -59,15 +64,10 @@ namespace WhiteLagoon.Controllers
         #endregion
         public IActionResult Update(int ameityId)
         {
-            var amentiyDB = _unitOfWork.Amenity.Get(x => x.Id == ameityId);
+            var amentiyDB = _amenityService.GetAmenityById( ameityId);
             var amenityVM = new AmenityVM()
             {
-                VillaList = _unitOfWork.Villa.GetAll()
-                                                .Select(x => new SelectListItem
-                                                {
-                                                    Text = x.Name,
-                                                    Value = x.Id.ToString()
-                                                }),
+                VillaList = VillaDropDownList(),
                 Name = amentiyDB.Name,
                 VillaId = amentiyDB.VillaId,
                 Description = amentiyDB.Description
@@ -95,11 +95,12 @@ namespace WhiteLagoon.Controllers
                     Description = amenityVM.Description,
                     VillaId = amenityVM.VillaId,
                 };
-                _unitOfWork.Amenity.Update(amenityDB);
-                _unitOfWork.Save();
-                TempData["success"] = "Amenity is updated successfuly";
-                return RedirectToAction(nameof(Index));
-
+               bool updated =  _amenityService.UpdateAmenity(amenityDB);
+                if (updated)
+                {
+                    TempData["success"] = "Amenity is updated successfuly";
+                   return RedirectToAction(nameof(Index));
+                }
             }
             TempData["error"] = "Can not Update Amenity";
             return View(amenityVM);
@@ -109,15 +110,10 @@ namespace WhiteLagoon.Controllers
         public IActionResult Delete(int villaId)
         {
 
-            var amenityDB = _unitOfWork.Amenity.Get(x => x.Id == villaId);
+            var amenityDB = _amenityService.GetAmenityById( villaId);
             var amenityVM = new AmenityVM()
             {
-                VillaList = _unitOfWork.Villa.GetAll()
-                                                .Select(x => new SelectListItem
-                                                {
-                                                    Text = x.Name,
-                                                    Value = x.Id.ToString()
-                                                }),
+                VillaList = VillaDropDownList(),
                 Description = amenityDB.Description,
                 VillaId = amenityDB.VillaId,
                 Name = amenityDB.Name,
@@ -137,17 +133,26 @@ namespace WhiteLagoon.Controllers
         [HttpPost]
         public IActionResult Delete(AmenityVM amenityVM)
         {
-            var amenityDB = _unitOfWork.Amenity.Get(x => x.Id == amenityVM.Id);
-            if (amenityDB is not null)
+            bool deleted = _amenityService.DeleteAmenity(amenityVM.Id);
+            if (deleted)
             {
-                _unitOfWork.Amenity.Remove(amenityDB);
-                _unitOfWork.Save();
                 TempData["success"] = "Villa Number Deleted successfly";
                 return RedirectToAction(nameof(Index));
-
             }
+
             TempData["error"] = "Can't Delete the Villa Number";
             return View(amenityVM);
         }
+        private IEnumerable<SelectListItem> VillaDropDownList()
+        {
+            return _villaService.GetAllVillas().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            });
+
+        }
+
     }
+    
 }

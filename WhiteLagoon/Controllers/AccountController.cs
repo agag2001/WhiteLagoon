@@ -15,15 +15,15 @@ namespace WhiteLagoon.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+     
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(IUnitOfWork unitOfWork, UserManager<AppUser> userManager,
+        public AccountController( UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
-            _unitOfWork = unitOfWork;
+          
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;

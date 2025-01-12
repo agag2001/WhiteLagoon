@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Syncfusion.Presentation;
 using System.Diagnostics;
 using WhiteLagoon.Application.Common.Interfaces;
+using WhiteLagoon.Application.Services.Interface;
 using WhiteLagoon.Application.Utilities;
 using WhiteLagoon.Models;
 using WhiteLagoon.ViewModels;
@@ -10,20 +11,23 @@ namespace WhiteLagoon.Controllers
 {
     public class HomeController : Controller
     {
-		private readonly IUnitOfWork _unitOfWork;
+        private readonly IVillaService _villaService;
+        private readonly IVillaNumberService _villaNumberService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
+        public HomeController(IWebHostEnvironment webHostEnvironment, IVillaService villaService, IVillaNumberService villaNumberService)
         {
-            _unitOfWork = unitOfWork;
+
             _webHostEnvironment = webHostEnvironment;
+            _villaService = villaService;
+            _villaNumberService = villaNumberService;
         }
 
         public IActionResult Index()
         {
             HomeVM homeVM = new()
             {
-                VillaList = _unitOfWork.Villa.GetAll(includeProperties:"VillaAmenity"),
+                VillaList = _villaService.GetAllVillas(IncludeProperties:"VillaAmenity"),
                 Nights = 1,
                 CheckInDate = DateOnly.FromDateTime(DateTime.Now),
                 
@@ -36,23 +40,10 @@ namespace WhiteLagoon.Controllers
         [HttpPost]
         public IActionResult GetVillasByDate(int nights , DateOnly checkInDate)
         {
-            var villalist = _unitOfWork.Villa.GetAll(includeProperties:"VillaAmenity");
-            // get only the approved bookings and the checkin (Status) these books may overlapped with my Booking
-            var bookings = _unitOfWork.Booking.GetAll(b => b.Status == SD.StatusApproved || b.Status == SD.StatusCheckIn).ToList();
-
-            var villaNumbers = _unitOfWork.VillaNumber.GetAll().ToList();
-            
-
-            foreach (var Villa in villalist)
-            {
-                var availabelRooms = SD.VillaRoomAvailable_Count(Villa.Id, bookings, villaNumbers, nights, checkInDate);
-                Villa.IsAvilable = availabelRooms > 0 ? true : false;   
-                
-               
-            }
+          
             HomeVM homeVM = new()
             {
-                VillaList = villalist,
+                VillaList = _villaService.GetAvaliableVillaByDate(nights,checkInDate),
                 Nights = nights,
                 CheckInDate = checkInDate
 
@@ -62,7 +53,7 @@ namespace WhiteLagoon.Controllers
         }
         public IActionResult GeneratePPTExport(int id)
         {
-            var villa = _unitOfWork.Villa.Get(x => x.Id == id,includeProperties:"VillaAmenity");
+            var villa = _villaService.GetVillaById( id,IncludeProperties:"VillaAmenity");
             if (villa is null)
             {
                 RedirectToAction(nameof(Error));

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WhiteLagoon.Application.Common.Interfaces;
+using WhiteLagoon.Application.Services.Implementation;
+using WhiteLagoon.Application.Services.Interface;
 using WhiteLagoon.Domain.Entites;
 using WhiteLagoon.Infrastructure.Data;
 
@@ -10,19 +12,17 @@ namespace WhiteLagoon.Controllers
     [Authorize]
     public class VillaController : Controller
     {
-        private readonly IUnitOfWork  _unitOfWork;
-        private readonly IWebHostEnvironment _webHostEnvironment; 
-        public VillaController(IUnitOfWork unitOfWork,IWebHostEnvironment webHostEnviroment)
+        private readonly IVillaService _villaService;
+
+        public VillaController(IVillaService villaService)
         {
-			_unitOfWork = unitOfWork;
-            _webHostEnvironment = webHostEnviroment;    
+            _villaService = villaService;
         }
 
-        public AppDbContext Context { get; }
 
         public IActionResult Index()
         {
-            var villas = _unitOfWork.Villa.GetAll();  
+            var villas = _villaService.GetAllVillas();  
             return View(villas);
         }
         public IActionResult Create()
@@ -32,35 +32,22 @@ namespace WhiteLagoon.Controllers
         [HttpPost]
         public IActionResult Create(Villa obj)
         {
-            if (obj.Name== obj.Description)
+
+            if (obj.Name == obj.Description)
             {
                 ModelState.AddModelError("", "Name can't be the same as Description");
-
             }
-            if (ModelState.IsValid)
-            {
-                if(obj.Image is not null)
+            if(ModelState.IsValid) {    
+               bool sucessCreate = _villaService.CreateVilla(obj);
+                if (sucessCreate)
                 {
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName);
-                    string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, @"Images\VillaImage");
+                    TempData["success"] = "Villa is Created successfuly . ";
+                    return RedirectToAction(nameof(Index));
 
-                    using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
-                    {
-                        obj.Image.CopyTo(fileStream);
-                        obj.ImageUrl = @"\Images\VillaImage\" + fileName; 
-                    }
-                }
-                else
-                {
-                    //default image
-                    obj.ImageUrl = "https://placehold.co/600x400";
-                }
-				_unitOfWork.Villa.Add(obj);
-				_unitOfWork.Save();
-                TempData["success"] = "Villa is Created successfuly . ";
-                return RedirectToAction(nameof(Index));
+                }     
             }
-            TempData["error"] = "Villa is Created successfuly . ";
+
+            TempData["error"] = "can't  Created Villa ";
             return View(obj);
           
         }
@@ -68,7 +55,7 @@ namespace WhiteLagoon.Controllers
         #region update
         public IActionResult Update(int VillaId)
         {
-            Villa? obj = _unitOfWork.Villa.Get(x => x.Id == VillaId);
+            Villa? obj = _villaService.GetVillaById(VillaId);
             if (obj == null)
             {
                 return RedirectToAction("Error", "Home");
@@ -82,40 +69,24 @@ namespace WhiteLagoon.Controllers
 
             if (ModelState.IsValid)
             {
-                if (obj.Image is not null)
+                bool villaUpdated = _villaService.UpdateVilla(obj);
+                if (villaUpdated)
                 {
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName);
-                    string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, @"Images\VillaImage");
-                    //delete old ImageUrl 
-                    if (!string.IsNullOrEmpty(obj.ImageUrl))
-                    {
-                        string oldPath = Path.Combine(_webHostEnvironment.WebRootPath, obj.ImageUrl.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldPath))
-                        {
-                            System.IO.File.Delete(oldPath); 
-                        }
-                    }
-                    using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
-                    {
-                        obj.Image.CopyTo(fileStream);
-                        obj.ImageUrl = @"\Images\VillaImage\" + fileName;
-                    }
+                   TempData["success"] = "Villa is updated successfuly . ";
+                   return RedirectToAction(nameof(Index));
                 }
-               
-                _unitOfWork.Villa.Update(obj);
-				_unitOfWork.Save();
-                TempData["success"] = "Villa is updated successfuly . ";
-                return RedirectToAction(nameof(Index));
+             
             }
             TempData["error"] = "Villa can't be update ";
             return View(obj);
 
         }
+
         #endregion
      
         public IActionResult Delete(int VillaId)
         {
-            Villa? obj = _unitOfWork.Villa.Get(x => x.Id == VillaId);
+            Villa? obj = _villaService.GetVillaById(VillaId);
             if (obj is null)
             {
                 return RedirectToAction("Error", "Home");
@@ -126,27 +97,20 @@ namespace WhiteLagoon.Controllers
         [HttpPost]
         public IActionResult Delete(Villa obj)
         {
-         
-            Villa? objDb = _unitOfWork.Villa.Get(x => x.Id == obj.Id);
 
-
-            if (objDb is not null)
+            bool villaDeleted = _villaService.DeleteVilla(obj.Id);
+            if (villaDeleted)
             {
-                if (!string.IsNullOrEmpty(objDb.ImageUrl))
-                {
-                    string oldPath = Path.Combine(_webHostEnvironment.WebRootPath, objDb.ImageUrl.TrimStart('\\'));
-                    if (System.IO.File.Exists(oldPath))
-                    {
-                        System.IO.File.Delete(oldPath);
-                    }
-                }
-                _unitOfWork.Villa.Remove(objDb);
-				_unitOfWork.Save();
                 TempData["success"] = "the villa has been deleted successfuly";
                 return RedirectToAction(nameof(Index));
             }
-            TempData["error"] = "the villa can't be deleted";
-            return View(obj);
+
+            else
+            {
+                TempData["error"] = "the villa can't be deleted";
+                return View(obj);
+            }
+           
 
         }
 
